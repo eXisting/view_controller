@@ -26,7 +26,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/December2022/AmygDemo_02_Win.unity
     guid: 31aacbe8361a440dea7ca91290db1fd7
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/December2022/LatestTest/AmygDemo_01_iOS_08.unity
     guid: c5672b544b82d4d4daa6ebf37f16059d
   - enabled: 0
