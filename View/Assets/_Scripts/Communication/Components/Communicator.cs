@@ -83,11 +83,11 @@ namespace _Scripts.Communication.Components
 
         public void OnConnectionRequest(ConnectionRequest request)
         {
-            Debug.Log("Someone requested connection");
-            
+            Debug.Log("Someone requested connection " + request.RemoteEndPoint);
+      
             var peer = request.AcceptIfKey("YouCantConnectWithoutKey");
-            
-            Debug.Log(peer == null ? "Successful connection" : "Connection failed");
+      
+            Debug.Log(peer == null ? "Connection failed" : $"Successful connection from: {request.RemoteEndPoint}");
         }
     }
 }
