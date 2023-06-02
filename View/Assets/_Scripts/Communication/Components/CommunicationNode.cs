@@ -1,5 +1,4 @@
 using System;
-using _Scripts.Communication.CustomEditorScripts;
 using _Scripts.Communication.Enum;
 using _Scripts.Communication.TDO;
 using UnityEngine;
@@ -8,31 +7,24 @@ namespace _Scripts.Communication.Components
 {
   public class CommunicationNode : MonoBehaviour
   {
-    [SerializeField] private ViewOperation operation;
-    [SerializeField] private string userName;
-    [SerializeField] private string message;
-    //[DateTimeInput, SerializeField] private DateTimeSerializable date;
-    [SerializeField] private string videoName;
+    private ViewSignal _signal;
+    private DateTime _dateTime;
 
-    private ViewSignal signal;
-    private DateTime dateTime;
+    private bool _activated;
 
-    private bool activated;
-
-    private void Start()
+    public void Communicate(ViewOperation operation, string userName, string message, string videoId)
     {
-      dateTime = DateTime.Now;
+      Debug.Log($"Communicate from node: {gameObject.name}");
       
-      signal = new ViewSignal(operation, userName, message, dateTime, videoName);
-    }
-
-    public void Communicate()
-    {
-      if (activated)
+      if (_activated)
         return;
-      activated = true;
+      _activated = true;
       
-      Communicator.ToController(signal);
+      _dateTime = DateTime.Now;
+      
+      _signal = new ViewSignal(operation, userName, message, _dateTime, videoId);
+      
+      Communicator.ToController(_signal);
     }
   }
 }

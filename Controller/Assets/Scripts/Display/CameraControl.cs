@@ -1,6 +1,6 @@
 using Component;
+using DTO;
 using Enum;
-using Tdo;
 using UnityEngine;
 
 namespace Display
@@ -9,8 +9,8 @@ namespace Display
   {
     [SerializeField] private FixedJoystick joystick;
 
-    private readonly ViewSignal _moveSignal = new(ViewOperation.MoveCursor);
-    private readonly ViewSignal _modeSignal = new(ViewOperation.CursorMode);
+    private readonly ControllerSignal _moveSignal = new(ControllerOperation.MoveCursor);
+    private readonly ControllerSignal _modeSignal = new(ControllerOperation.CursorMode);
 
     private void OnEnable() => 
       Communicator.ToView(_modeSignal);

@@ -6,12 +6,14 @@ namespace _Scripts.Communication.Controls
 {
   public class ControlledCamera : MonoBehaviour
   {
+    [SerializeField] public float speed;
+      
     [SerializeField] public float left;
     [SerializeField] public float right;
     [SerializeField] public float up;
     [SerializeField] public float down;
 
     private void OnEnable() => 
-      HeadControl.Instance.SetupCamera(GetComponent<Camera>(), new RotationRestrictions(left, right, up, down));
+      HeadControl.Instance.SetupCamera(GetComponent<Camera>(), new ControlledCameraData(speed, left, right, up, down));
   }
 }

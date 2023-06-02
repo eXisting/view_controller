@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using DTO;
 using Enum;
 using Screen;
-using Tdo;
 using UI;
+using UI.Messages;
 using UnityEngine;
 
 namespace Component
@@ -21,13 +22,13 @@ namespace Component
       Navigator.Configure(screens);
       Navigator.Open(Enum.Screen.Sync);
 
-      Communicator.ServerStarted += SustainServer;
+      Communicator.ServerConnected += SustainServer;
       Communicator.MessageReceived += ProcessMessage;
     }
 
     private void OnDestroy()
     {
-      Communicator.ServerStarted -= SustainServer;
+      Communicator.ServerConnected -= SustainServer;
       Communicator.Stop();
     }
 
@@ -36,14 +37,14 @@ namespace Component
       StartCoroutine(Communicator.SustainConnection());
     }
     
-    private void ProcessMessage(ControllerSignal signal)
+    private void ProcessMessage(ViewSignal signal)
     {
       switch (signal.Operation)
       {
-        case ControllerOperation.Message:
+        case ViewOperation.Message:
           NotifyMessage();
           break;
-        case ControllerOperation.Call:
+        case ViewOperation.Call:
           StartCoroutine(nameof(NotifyCall));
           break;
         default:

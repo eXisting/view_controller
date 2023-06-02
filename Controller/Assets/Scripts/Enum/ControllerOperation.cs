@@ -2,7 +2,8 @@ namespace Enum
 {
   public enum ControllerOperation
   {
-    Message = 0,
-    Call
+    CursorMode = 0,
+    MoveCursor,
+    Select
   }
 }

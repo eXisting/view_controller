@@ -1,4 +1,8 @@
+using System;
+using System.Collections.Generic;
 using Component;
+using DTO;
+using Enum;
 using TMPro;
 using UI;
 using UnityEngine;
@@ -12,31 +16,45 @@ namespace Screen
         [SerializeField] private Button back;
     
         [SerializeField] private VideoPlayer videoPlayer;
-        [SerializeField] private GameObject typeMachineGO;
         [SerializeField] private TMP_Text userName;
         [SerializeField] private TMP_Text subtitles;
 
-        private TypeMachine _typeMachine;
+        private ViewSignal _viewSignal = new(ViewOperation.Call, "Creator", "Enjoy your life");
+
+        private readonly Dictionary<string, VideoClip> _videoCalls = new();
 
         private void Awake()
         {
-            videoPlayer.Prepare();
+            var videoCallsArray = Resources.LoadAll<VideoClip>("VideoCalls");
+
+            foreach (var video in videoCallsArray) 
+                _videoCalls.Add(video.name, video);
+        }
+
+        private void OnEnable()
+        {
+            if (Communicator.Calls.Count != 0)
+                _viewSignal = Communicator.Calls.Pop();
+            Prepare(_viewSignal.UserName, _viewSignal.VideoId, _viewSignal.Message);
+            
+            videoPlayer.Play();
+            subtitles.gameObject.SetActive(true);
         }
 
         private void Start()
         {
-            _typeMachine = typeMachineGO.GetComponent<TypeMachine>();
-      
-            var data = Communicator.Signals.Pop();
-            Prepare(data.UserId, data.VideoId, data.Message);
-      
             back.onClick.AddListener(Back);
-            videoPlayer.Play();
-            _typeMachine.StartTypewriter();
         }
 
-        private void Prepare(string userName, string videoName, string message)
+        private void OnDisable() => 
+            subtitles.gameObject.SetActive(false);
+
+        private void Prepare(string userName, string videoId, string message)
         {
+            if (videoId != null && _videoCalls.TryGetValue(videoId, out var videoClip))
+                videoPlayer.clip = videoClip;
+            videoPlayer.Prepare();
+
             this.userName.text = userName;
             subtitles.text = message;
         }

@@ -1,5 +1,6 @@
 using System;
 using _Scripts.Communication.Enum;
+using UnityEngine.Serialization;
 
 namespace _Scripts.Communication.TDO
 {
@@ -8,7 +9,7 @@ namespace _Scripts.Communication.TDO
   {
     public ViewOperation Operation;
     
-    public string UserId;
+    public string UserName;
 
     public string Message;
     
@@ -18,13 +19,13 @@ namespace _Scripts.Communication.TDO
 
     public ViewSignal(
       ViewOperation operation,
-      string userId,
+      string userName,
       string message,
       DateTime time = default,
       string videoId = default)
     {
       Operation = operation;
-      UserId = userId;
+      UserName = userName;
       Message = message;
       Time = time;
       VideoId = videoId;

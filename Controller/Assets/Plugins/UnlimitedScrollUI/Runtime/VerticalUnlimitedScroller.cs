@@ -113,7 +113,7 @@ namespace UnlimitedScrollUI {
         public void Generate(GameObject newCell, int newTotalCount, Action<int, ICell> onGenerate) {
             if (Generated) return;
 
-            if (!Initialized) Initialize();
+            Initialize();
             cellPrefab = newCell;
             totalCount = newTotalCount;
             onCellGenerate = onGenerate;

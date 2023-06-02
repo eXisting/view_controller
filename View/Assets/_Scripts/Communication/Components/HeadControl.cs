@@ -13,9 +13,6 @@ namespace _Scripts.Communication.Components
   public class HeadControl : MonoBehaviour
   {
     [SerializeField] private TMP_InputField ipAddress;
-    [SerializeField] private Button connect;
-
-    [SerializeField] private Joystick joystick;
     [SerializeField] private Cursor cursor;
 
     private static HeadControl instance;
@@ -45,56 +42,21 @@ namespace _Scripts.Communication.Components
       if (instance != null && instance != this) 
         Destroy(gameObject);
     }
-    
+
     private void Start()
     {
-      ipAddress.text = GetLocalIPAddress();
-      connect.onClick.AddListener(Connect2Server);
+      Communicator.Start();
+      ipAddress.text = Communicator.GetLocalIPAddress();
 
-      Communicator.Connected += () => StartCoroutine(Communicator.SustainPool());
+      Communicator.Started += () => StartCoroutine(Communicator.SustainPool());
       Communicator.MessageReceived += ProcessMessage;
     }
 
-    // private void Update()
-    // {
-    //   cursor.direction = joystick.Direction;
-    // }
-    
-    public void SetupCamera(Camera camera, RotationRestrictions rotationRestrictions) => 
-      cursor.SetupCamera(camera, rotationRestrictions);
+    public void SetupCamera(Camera camera, ControlledCameraData controlledCameraData) => 
+      cursor.SetupCamera(camera, controlledCameraData);
 
     public void Select() => 
       cursor.Raycast();
-
-    private string GetLocalIPAddress()
-    {
-      var ipAddress = "";
-      var interfaces = NetworkInterface.GetAllNetworkInterfaces();
-
-      foreach (var iface in interfaces)
-      {
-        // Consider only the interfaces that are up and connected to a network
-        if (iface.OperationalStatus == OperationalStatus.Up &&
-            iface.NetworkInterfaceType != NetworkInterfaceType.Loopback)
-        {
-          var addresses = iface.GetIPProperties().UnicastAddresses;
-          foreach (var address in addresses)
-          {
-            // Consider only IPv4 addresses
-            if (address.Address.AddressFamily != AddressFamily.InterNetwork)
-              continue;
-
-            ipAddress = address.Address.ToString();
-            break;
-          }
-        }
-
-        if (!string.IsNullOrEmpty(ipAddress))
-          break;
-      }
-
-      return ipAddress;
-    }
     
     private void ProcessMessage(string json)
     {
@@ -103,7 +65,6 @@ namespace _Scripts.Communication.Components
       switch (signal.Operation)
       {
         case ControllerOperation.CursorMode:
-          //nativeInput.SetActive(false);
           break;
         case ControllerOperation.MoveCursor:
           cursor.direction = signal.Direction;
@@ -116,10 +77,7 @@ namespace _Scripts.Communication.Components
       }
     }
 
-    private void Connect2Server() => 
-      Communicator.Connect(ipAddress.text);
-
     private void OnDestroy() => 
-      Communicator.Client.Stop();
+      Communicator.Server.Stop();
   }
 }

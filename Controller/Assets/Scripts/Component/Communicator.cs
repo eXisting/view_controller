@@ -3,53 +3,60 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using DTO;
+using Enum;
 using LiteNetLib.Utils;
-using Tdo;
 using UnityEngine;
 using LiteNetLib;
+using Newtonsoft.Json;
 
 namespace Component
 {
   public static class Communicator
   {
-    public static Stack<ControllerSignal> Signals = new();
-    
-    internal static event Action ServerStarted;
-    internal static event Action<ControllerSignal> MessageReceived; 
-    
-    internal static NetPeer Peer;
+    public static readonly Stack<ViewSignal> Calls = new();
+    public static Dictionary<string, List<MessageData>> MessagesBank = new();
 
-    private static readonly NetManager Server;
+    internal static event Action ServerConnected;
+    internal static event Action<ViewSignal> MessageReceived; 
+    
+    private static readonly NetManager Client;
 
     static Communicator()
     {
-      Server = new NetManager(new ServerListener());
+      Client = new NetManager(new ClientListener());
+
+      Client.Start();
     }
 
-    internal static void ToView(ViewSignal viewSignal)
+    internal static void ToView(ControllerSignal controllerSignal)
     {
-      var json = JsonUtility.ToJson(viewSignal);
+      var json = JsonUtility.ToJson(controllerSignal);
 
       Debug.Log($"Message to send: {json}");
       
-      if (Server is not { FirstPeer: not null } ||
-          Peer.ConnectionState != ConnectionState.Connected)
+      if (Client is not { FirstPeer: not null } ||
+          Client.FirstPeer.ConnectionState != ConnectionState.Connected)
         return;
 
       var writer = new NetDataWriter();
       writer.Put(json);
             
-      Peer.Send(writer, DeliveryMethod.ReliableOrdered);
+      Client.FirstPeer.Send(writer, DeliveryMethod.ReliableOrdered);
     }
     
-    internal static void Start()
+    internal static void Connect(string ipAddress)
     {
-      Server.Start(9050);
-      ServerStarted?.Invoke();
+      Client.Connect(ipAddress, 9050, "YouCantConnectWithoutKey");
+
+      if (!string.IsNullOrEmpty(BlackBox.MessagesJson))
+        MessagesBank = JsonConvert.DeserializeObject<Dictionary<string, List<MessageData>>>(BlackBox.MessagesJson);
+      
+      ServerConnected?.Invoke();
     }
-    
+
     internal static void Stop() => 
-      Server.Stop();
+      Client.Stop();
 
     internal static IEnumerator SustainConnection()
     {
@@ -57,27 +64,44 @@ namespace Component
       {
         yield return null;
 
-        Server.PollEvents();
+        Client.PollEvents();
       }
     }
 
-    internal static void ProcessMessage(string json)
+    internal static void ProcessSignal(string json)
     {
-      var signal = JsonUtility.FromJson<ControllerSignal>(json);
-      Signals.Push(signal);
+      var signal = JsonUtility.FromJson<ViewSignal>(json);
 
+      switch (signal.Operation)
+      {
+        case ViewOperation.Message:
+          if (MessagesBank.TryGetValue(signal.UserName, out var list))
+          {
+            list.Add(new MessageData(signal.UserName, signal.Message, signal.DateTime));
+            break;
+          }
+          MessagesBank.Add(signal.UserName, new List<MessageData> { new(signal.UserName, signal.Message, signal.DateTime) });
+
+          BlackBox.SaveMessages(MessagesBank);
+          break;
+        
+        case ViewOperation.Call:
+          Calls.Push(signal);
+          break;
+        
+        default:
+          Debug.LogError("Signal operation is unidentified");
+          break;
+      }
+      
       MessageReceived?.Invoke(signal);
     }
   }
 
-  public class ServerListener : INetEventListener
+  public class ClientListener : INetEventListener
   {
-    public void OnPeerConnected(NetPeer peer)
-    {
-      Communicator.Peer = peer;
-      
-      Debug.Log("Connected to server: " + peer.EndPoint);
-    }
+    public void OnPeerConnected(NetPeer peer) => 
+      Debug.Log("Client connected: " + peer.EndPoint);
 
     public void OnPeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo) =>
       Debug.Log("Client disconnected: " + peer.EndPoint + ", Reason: " + disconnectInfo.Reason);
@@ -91,24 +115,20 @@ namespace Component
       var receivedString = reader.GetString();
       Debug.Log($"Message received: {receivedString}");
             
-      Communicator.ProcessMessage(receivedString);
-
-      // You can send a response back to the client if needed
-      // Example: peer.Send("Response", DeliveryMethod.ReliableOrdered);
+      Communicator.ProcessSignal(receivedString);
     }
 
     public void OnNetworkReceiveUnconnected(IPEndPoint remoteEndPoint, NetPacketReader reader, 
       UnconnectedMessageType messageType) { }
 
-    public void OnNetworkLatencyUpdate(NetPeer peer, int latency) { }
+    public void OnNetworkLatencyUpdate(NetPeer peer, int latency)
+    {
+      Debug.Log($"Peer: {peer.EndPoint.Address}");
+    }
 
     public void OnConnectionRequest(ConnectionRequest request)
     {
-      Debug.Log("Someone requested connection " + request.RemoteEndPoint);
-      
-      var peer = request.AcceptIfKey("YouCantConnectWithoutKey");
-      
-      Debug.Log(peer == null ? "Connection failed" : $"Successful connection from: {request.RemoteEndPoint}");
+      Debug.Log("Someone requested connection");
     }
   }
 }
