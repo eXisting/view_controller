@@ -78,10 +78,11 @@ namespace Component
           if (MessagesBank.TryGetValue(signal.UserName, out var list))
           {
             list.Add(new MessageData(signal.UserName, signal.Message, signal.DateTime));
+            BlackBox.SaveMessages(MessagesBank);
             break;
           }
+          
           MessagesBank.Add(signal.UserName, new List<MessageData> { new(signal.UserName, signal.Message, signal.DateTime) });
-
           BlackBox.SaveMessages(MessagesBank);
           break;
         

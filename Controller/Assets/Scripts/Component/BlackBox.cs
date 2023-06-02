@@ -32,7 +32,7 @@ namespace Component
         using var newFile = File.CreateText(PathToFile);
         newFile.Write(json);
         MessagesJson = json;
-        
+        NewData?.Invoke();
         return;
       }
       
