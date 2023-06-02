@@ -57,8 +57,6 @@ namespace Component
     {
       Handheld.Vibrate();
       AudioSource.PlayClipAtPoint(messageRingtone, transform.position);
-      
-      messageBubble.Increase();
     }
 
     private void NotifyCall()

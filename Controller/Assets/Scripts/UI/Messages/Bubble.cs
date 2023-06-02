@@ -37,17 +37,5 @@ namespace UI.Messages
       counter.text = _counter.ToString();
       gameObject.SetActive(_counter != 0);
     }
-
-    internal void Increase()
-    {
-      _counter++;
-      Show();
-    }
-
-    internal void Decrease()
-    {
-      _counter--;
-      Show();
-    }
   }
 }
