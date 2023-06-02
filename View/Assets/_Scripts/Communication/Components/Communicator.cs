@@ -20,6 +20,8 @@ namespace _Scripts.Communication.Components
         internal static void Start()
         {
             Server.Start(9050);
+            
+            Started?.Invoke();
         }
         
         internal static void ProcessMessage(string msg)

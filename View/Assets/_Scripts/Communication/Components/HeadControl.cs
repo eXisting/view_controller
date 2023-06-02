@@ -12,7 +12,7 @@ namespace _Scripts.Communication.Components
 {
   public class HeadControl : MonoBehaviour
   {
-    [SerializeField] private TMP_InputField ipAddress;
+    [SerializeField] private TMP_Text ipAddress;
     [SerializeField] private Cursor cursor;
 
     private static HeadControl instance;
