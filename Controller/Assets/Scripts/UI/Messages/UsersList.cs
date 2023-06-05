@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Component;
+using Component.Communicators;
 using DTO;
 using UnityEngine;
 using UnlimitedScrollUI;
@@ -19,7 +20,7 @@ namespace UI.Messages
 
     private void Awake()
     {
-      foreach (var messagePair in Communicator.MessagesBank)
+      foreach (var messagePair in HeadControl.Instance.Communicator.MessagesBank)
       {
         var firstOrDefaultUnread = messagePair.Value.FirstOrDefault(x => !x.Read);
 
@@ -42,9 +43,9 @@ namespace UI.Messages
     
     private void Refresh(int index)
     {
-      var firstOrDefaultUnread = Communicator.MessagesBank[_lastMessages[index].data.UserName].FirstOrDefault(x => !x.Read);
+      var firstOrDefaultUnread = HeadControl.Instance.Communicator.MessagesBank[_lastMessages[index].data.UserName].FirstOrDefault(x => !x.Read);
 
-      _lastMessages[index] = (Communicator.MessagesBank[_lastMessages[index].data.UserName].Last(),
+      _lastMessages[index] = (HeadControl.Instance.Communicator.MessagesBank[_lastMessages[index].data.UserName].Last(),
         string.IsNullOrEmpty(firstOrDefaultUnread.UserName));
       
       Generate();
@@ -53,7 +54,7 @@ namespace UI.Messages
     private void Generate()
     {
       scroll.Clear();
-      scroll.Generate(userCard, Communicator.MessagesBank.Count, SetupCard);
+      scroll.Generate(userCard, HeadControl.Instance.Communicator.MessagesBank.Count, SetupCard);
     }
 
     private void SetupCard(int index, ICell card)

@@ -1,4 +1,5 @@
 using Component;
+using Component.Communicators;
 using UI.Messages;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,7 +20,7 @@ namespace Display
     private void ClearAllMessages()
     {
       BlackBox.ClearMessages();
-      Communicator.MessagesBank.Clear();
+      HeadControl.Instance.Communicator.MessagesBank.Clear();
       list.Refresh();
       bubble.Refresh();
     }

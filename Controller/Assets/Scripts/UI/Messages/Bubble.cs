@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Component;
+using Component.Communicators;
 using TMPro;
 using UnityEngine;
 
@@ -26,7 +27,7 @@ namespace UI.Messages
     {
       _counter = 0;
       
-      foreach (var unread in Communicator.MessagesBank.Select(messagePair => messagePair.Value.FindAll(x => !x.Read)))
+      foreach (var unread in HeadControl.Instance.Communicator.MessagesBank.Select(messagePair => messagePair.Value.FindAll(x => !x.Read)))
         _counter += unread.Count;
       
       Show();

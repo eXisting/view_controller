@@ -5604,13 +5604,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 674b4e1e70248438da0f2b571ece2143, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  communicatorType: 1
+  client: {fileID: 6525710413402375987, guid: b2eaa8eef0d0c444089a6761c4da1001, type: 3}
+  server: {fileID: 8576609412698260438, guid: 7971a782f0dfa431a97191ae51cc961f, type: 3}
   screens:
   - {fileID: 457437760}
   - {fileID: 31050391}
   - {fileID: 1577516826}
   messageRingtone: {fileID: 8300000, guid: 54b444d55913748a8a6785da83f80476, type: 3}
   callNotification: {fileID: 1480097819}
-  messageBubble: {fileID: 102896929}
 --- !u!1 &2005031984
 GameObject:
   m_ObjectHideFlags: 0

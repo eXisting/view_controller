@@ -1,4 +1,6 @@
+using System;
 using Component;
+using Component.Communicators;
 using DTO;
 using Enum;
 using UnityEngine;
@@ -12,8 +14,15 @@ namespace Display
     private readonly ControllerSignal _moveSignal = new(ControllerOperation.MoveCursor);
     private readonly ControllerSignal _modeSignal = new(ControllerOperation.CursorMode);
 
+    private ICommunicator _communicator;
+    
+    private void Start()
+    {
+      _communicator = HeadControl.Instance.Communicator;
+    }
+
     private void OnEnable() => 
-      Communicator.ToView(_modeSignal);
+      HeadControl.Instance.Communicator.Send(_modeSignal);
 
     private void Update()
     {
@@ -21,7 +30,7 @@ namespace Display
         return;
       
       _moveSignal.Direction = joystick.Direction;
-      Communicator.ToView(_moveSignal);
+      _communicator.Send(_moveSignal);
     }
   }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Component;
+using Component.Communicators;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,7 +29,7 @@ namespace UI.Messages
     public void Open(string userName)
     {
       this.userName.text = userName;
-      scroll.Generate(messageCard, Communicator.MessagesBank[userName].Count, SetupCard);
+      scroll.Generate(messageCard, HeadControl.Instance.Communicator.MessagesBank[userName].Count, SetupCard);
 
       gameObject.SetActive(true);
     }
@@ -37,7 +38,7 @@ namespace UI.Messages
     {
       _index = index;
       
-      (card as MessageCard)?.Setup(Communicator.MessagesBank[userName.text][index], index);
+      (card as MessageCard)?.Setup(HeadControl.Instance.Communicator.MessagesBank[userName.text][index], index);
     }
 
     private void Close()

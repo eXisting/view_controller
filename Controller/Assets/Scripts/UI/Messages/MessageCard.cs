@@ -1,5 +1,6 @@
 using System.Globalization;
 using Component;
+using Component.Communicators;
 using DTO;
 using TMPro;
 using UnityEngine;
@@ -30,13 +31,13 @@ namespace UI.Messages
     
     public void OnBecomeVisible(ScrollerPanelSide side)
     {
-      var message = Communicator.MessagesBank[_userName][_index];
+      var message = HeadControl.Instance.Communicator.MessagesBank[_userName][_index];
       message.Read = true;
-      Communicator.MessagesBank[_userName][_index] = message;
+      HeadControl.Instance.Communicator.MessagesBank[_userName][_index] = message;
       
       read.SetActive(false);
       
-      BlackBox.SaveMessages(Communicator.MessagesBank);
+      BlackBox.SaveMessages(HeadControl.Instance.Communicator.MessagesBank);
     }
 
     public void OnBecomeInvisible(ScrollerPanelSide side)

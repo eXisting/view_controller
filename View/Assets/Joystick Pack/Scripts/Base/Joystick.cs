@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using _Scripts.Communication.Components;
+using Communication.Scripts.Components;
 using UnityEngine;
 using UnityEngine.EventSystems;
 

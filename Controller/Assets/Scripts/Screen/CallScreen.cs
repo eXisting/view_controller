@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Component;
+using Component.Communicators;
 using DTO;
 using Enum;
 using TMPro;
@@ -33,8 +34,8 @@ namespace Screen
 
         private void OnEnable()
         {
-            if (Communicator.Calls.Count != 0)
-                _viewSignal = Communicator.Calls.Pop();
+            if (HeadControl.Instance.Communicator.Calls.Count != 0)
+                _viewSignal = HeadControl.Instance.Communicator.Calls.Pop();
             Prepare(_viewSignal.UserName, _viewSignal.VideoId, _viewSignal.Message);
             
             videoPlayer.Play();

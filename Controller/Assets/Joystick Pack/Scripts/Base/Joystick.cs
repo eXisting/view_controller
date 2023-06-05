@@ -1,4 +1,5 @@
 ﻿using Component;
+using Component.Communicators;
 using DTO;
 using Enum;
 using UnityEngine;
@@ -65,10 +66,10 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
 
     public virtual void OnPointerUp(PointerEventData eventData)
     {
-        Communicator.ToView(new ControllerSignal(ControllerOperation.MoveCursor, Vector2.zero));
+        HeadControl.Instance.Communicator.Send(new ControllerSignal(ControllerOperation.MoveCursor, Vector2.zero));
         
         if (Time.time - stopwatch < 0.5)
-            Communicator.ToView(new ControllerSignal(ControllerOperation.Select));
+            HeadControl.Instance.Communicator.Send(new ControllerSignal(ControllerOperation.Select));
 
         input = Vector2.zero;
         handle.anchoredPosition = Vector2.zero;
