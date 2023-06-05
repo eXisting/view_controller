@@ -9,7 +9,7 @@ namespace Display
 {
   public class CameraControl : MonoBehaviour
   {
-    [SerializeField] private FixedJoystick joystick;
+    [SerializeField] private Joystick joystick;
 
     private readonly ControllerSignal _moveSignal = new(ControllerOperation.MoveCursor);
     private readonly ControllerSignal _modeSignal = new(ControllerOperation.CursorMode);

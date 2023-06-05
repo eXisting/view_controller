@@ -139,7 +139,6 @@ namespace Component.Communicators
 
     public void OnNetworkLatencyUpdate(NetPeer peer, int latency)
     {
-      Debug.Log($"Peer: {peer.EndPoint.Address}");
     }
 
     public void OnConnectionRequest(ConnectionRequest request)
