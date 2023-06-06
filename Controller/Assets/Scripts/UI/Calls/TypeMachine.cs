@@ -1,4 +1,7 @@
 using System.Collections;
+using System.Collections.Generic;
+using DTO;
+using Screen;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -26,6 +29,7 @@ namespace UI.Calls
     private Coroutine _coroutine;
 
     private string _writer;
+    private List<SubtitlePart> _subtitles;
 
     private void Awake()
     {
@@ -58,6 +62,8 @@ namespace UI.Calls
     private void OnDisable()
     {
       StopAllCoroutines();
+     
+      _subtitles.Clear();
     }
 
     private void OnCollisionEnter2D(Collision2D _)
@@ -89,8 +95,12 @@ namespace UI.Calls
       StopAllCoroutines();
     }
 
+    public void PrepareSubtitles(List<SubtitlePart> subtitles)
+    {
+      _subtitles = subtitles;
+    }
 
-    public void StartTypewriter()
+    private void StartTypewriter()
     {
       StopAllCoroutines();
 
@@ -133,20 +143,27 @@ namespace UI.Calls
     {
       tmpProText.text = leadingCharBeforeDelay ? leadingChar : "";
 
-      yield return new WaitForSeconds(delayBeforeStart);
-
-      foreach (var c in _writer)
+      for (var i = 0; i < _subtitles.Count; i++)
       {
-        if (tmpProText.text.Length > 0)
+        _writer = _subtitles[i].Text;
+        timeBtwChars = (_subtitles[i].Finish - _subtitles[i].Start) / _subtitles[i].Text.Length;
+        
+        yield return new WaitForSeconds(i == 0 ? _subtitles[i].Start : _subtitles[i].Start - _subtitles[i - 1].Finish);
+
+        if (i != 0)
           tmpProText.text = tmpProText.text[..^leadingChar.Length];
+        
+        foreach (var c in _writer)
+        {
+          tmpProText.text += c;
+          yield return new WaitForSeconds(timeBtwChars);
+        }
 
-        tmpProText.text += c;
-        tmpProText.text += leadingChar;
-        yield return new WaitForSeconds(timeBtwChars);
+        if (i == _subtitles.Count - 1) 
+          continue;
+        
+        tmpProText.text += $" {leadingChar}";
       }
-
-      if (leadingChar != "")
-        tmpProText.text = tmpProText.text[..^leadingChar.Length];
     }
 
     private enum Options

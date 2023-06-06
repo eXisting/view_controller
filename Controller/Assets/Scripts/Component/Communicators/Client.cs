@@ -45,7 +45,7 @@ namespace Component.Communicators
 
     public void Send(ControllerSignal signal)
     {
-      var json = JsonUtility.ToJson(signal);
+      var json = Newtonsoft.Json.JsonConvert.SerializeObject(signal);
 
       Debug.Log($"Message to send: {json}");
       
@@ -76,9 +76,9 @@ namespace Component.Communicators
       }
     }
 
-    internal void ProcessSignal(string json)
+    public void ProcessSignal(string json)
     {
-      var signal = JsonUtility.FromJson<ViewSignal>(json);
+      var signal = JsonConvert.DeserializeObject<ViewSignal>(json);
 
       switch (signal.Operation)
       {

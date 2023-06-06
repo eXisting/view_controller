@@ -14,5 +14,7 @@ namespace Component.Communicators
     void Start(string ipAddress = default);
     
     void Send(ControllerSignal signal);
+
+    void ProcessSignal(string json);
   }
 }

@@ -6,7 +6,9 @@ using DTO;
 using Enum;
 using TMPro;
 using UI;
+using UI.Calls;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using UnityEngine.Video;
 
@@ -18,7 +20,8 @@ namespace Screen
     
         [SerializeField] private VideoPlayer videoPlayer;
         [SerializeField] private TMP_Text userName;
-        [SerializeField] private TMP_Text subtitles;
+
+        [SerializeField] private TypeMachine typeMachine;
 
         private ViewSignal _viewSignal = new(ViewOperation.Call, "Creator", "Enjoy your life");
 
@@ -36,10 +39,10 @@ namespace Screen
         {
             if (HeadControl.Instance.Communicator.Calls.Count != 0)
                 _viewSignal = HeadControl.Instance.Communicator.Calls.Pop();
-            Prepare(_viewSignal.UserName, _viewSignal.VideoId, _viewSignal.Message);
+            Prepare(_viewSignal.UserName, _viewSignal.VideoId, _viewSignal.Subtitles);
             
             videoPlayer.Play();
-            subtitles.gameObject.SetActive(true);
+            typeMachine.gameObject.SetActive(true);
         }
 
         private void Start()
@@ -48,16 +51,16 @@ namespace Screen
         }
 
         private void OnDisable() => 
-            subtitles.gameObject.SetActive(false);
+            typeMachine.gameObject.SetActive(false);
 
-        private void Prepare(string userName, string videoId, string message)
+        private void Prepare(string userName, string videoId, List<SubtitlePart> subtitles)
         {
             if (videoId != null && _videoCalls.TryGetValue(videoId, out var videoClip))
                 videoPlayer.clip = videoClip;
             videoPlayer.Prepare();
 
             this.userName.text = userName;
-            subtitles.text = message;
+            typeMachine.PrepareSubtitles(subtitles);
         }
     
         private void Back()

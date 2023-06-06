@@ -47,7 +47,7 @@ namespace Component.Communicators
 
         public void Send(ControllerSignal signal)
         {
-            var json = JsonUtility.ToJson(signal);
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(signal);
 
             Debug.Log(json);
 
@@ -59,10 +59,10 @@ namespace Component.Communicators
             writer.Put(json);
             Peer.Send(writer, DeliveryMethod.ReliableOrdered);
         }
-
-        internal void ProcessMessage(string json)
+        
+        public void ProcessSignal(string json)
         {
-            var signal = JsonUtility.FromJson<ViewSignal>(json);
+            var signal = Newtonsoft.Json.JsonConvert.DeserializeObject<ViewSignal>(json);
 
             switch (signal.Operation)
             {
@@ -144,7 +144,7 @@ namespace Component.Communicators
             var receivedString = reader.GetString();
             Debug.Log($"Message received: {receivedString}");
 
-            _server.ProcessMessage(receivedString);
+            _server.ProcessSignal(receivedString);
         }
 
         public void OnNetworkReceiveUnconnected(IPEndPoint remoteEndPoint, NetPacketReader reader,

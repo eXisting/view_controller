@@ -3898,7 +3898,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000061035156}
+  m_AnchoredPosition: {x: 0, y: 0.00012207031}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1415090882
@@ -4481,7 +4481,7 @@ MonoBehaviour:
   back: {fileID: 894105771}
   videoPlayer: {fileID: 1147064379}
   userName: {fileID: 1816195231}
-  subtitles: {fileID: 2106409529}
+  typeMachine: {fileID: 2106409531}
 --- !u!1 &1622617454
 GameObject:
   m_ObjectHideFlags: 0
@@ -6158,7 +6158,7 @@ MonoBehaviour:
   tmpProText: {fileID: 2106409529}
   delayBeforeStart: 0
   timeBtwChars: 0.1
-  leadingChar: '|'
+  leadingChar: ...
   leadingCharBeforeDelay: 0
   startOnEnable: 1
   clearAtStart: 0
