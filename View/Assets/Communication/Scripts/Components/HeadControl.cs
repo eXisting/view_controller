@@ -1,9 +1,10 @@
 using System;
 using Communication.Scripts.Components.Communicators;
+using Communication.Scripts.DTO;
 using Communication.Scripts.Enum;
 using Communication.Scripts.TDO;
 using UnityEngine;
-using Cursor = _Scripts.Communication.Controls.Cursor;
+using Cursor = Communication.Scripts.Controls.Cursor;
 
 namespace Communication.Scripts.Components
 {

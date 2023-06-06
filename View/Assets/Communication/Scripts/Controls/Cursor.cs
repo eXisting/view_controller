@@ -1,7 +1,9 @@
+using System;
+using Communication.Scripts.Enum;
 using Communication.Scripts.TDO;
 using UnityEngine;
 
-namespace _Scripts.Communication.Controls
+namespace Communication.Scripts.Controls
 {
   public class Cursor : MonoBehaviour
   {
@@ -10,8 +12,11 @@ namespace _Scripts.Communication.Controls
     
     [SerializeField] private float cursorSpeed;
     [SerializeField] private RectTransform cursor;
+
+    [SerializeField] private RaycastType raycastType;
+    [SerializeField] private float radius;
     [SerializeField] private LayerMask targetLayer;
-    
+
     [HideInInspector] public Vector2 direction;
 
     private Camera _camera;
@@ -70,9 +75,22 @@ namespace _Scripts.Communication.Controls
     {
       var ray = _camera.ScreenPointToRay(transform.position);
 
-      if (!Physics.SphereCast(ray, .02f, out var hit, Mathf.Infinity, targetLayer)) 
-        return;
+      RaycastHit hit;
+      switch (raycastType)
+      {
+        case RaycastType.Sphere:
+          Physics.SphereCast(ray, radius, out hit, Mathf.Infinity, targetLayer);
+          break;
+        case RaycastType.Ray:
+          Physics.Raycast(ray, out hit, Mathf.Infinity, targetLayer);
+          break;
+        default:
+          throw new ArgumentOutOfRangeException();
+      }
 
+      if (hit.collider == null)
+        return;
+      
       var fsm = hit.collider.gameObject.GetComponent<PlayMakerFSM>();
 
       var events = fsm.FsmEvents;

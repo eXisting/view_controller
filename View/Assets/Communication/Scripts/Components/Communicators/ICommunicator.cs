@@ -1,4 +1,5 @@
 using System;
+using Communication.Scripts.DTO;
 using Communication.Scripts.TDO;
 
 namespace Communication.Scripts.Components.Communicators

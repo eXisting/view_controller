@@ -2,9 +2,11 @@ using System;
 using System.Collections;
 using System.Net;
 using System.Net.Sockets;
+using Communication.Scripts.DTO;
 using Communication.Scripts.TDO;
 using LiteNetLib;
 using LiteNetLib.Utils;
+using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -41,7 +43,7 @@ namespace Communication.Scripts.Components.Communicators
 
     public void Send(ViewSignal signal)
     {
-      var json = JsonUtility.ToJson(signal);
+      var json = JsonConvert.SerializeObject(signal);
 
       Debug.Log($"Message to send: {json}");
       
@@ -74,7 +76,7 @@ namespace Communication.Scripts.Components.Communicators
 
     internal void ProcessSignal(string json)
     {
-      var signal = JsonUtility.FromJson<ControllerSignal>(json);
+      var signal = JsonConvert.DeserializeObject<ControllerSignal>(json);
 
       MessageReceived?.Invoke(signal);
     }

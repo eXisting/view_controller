@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Communication.Scripts.Components;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Cursor = Communication.Scripts.Controls.Cursor;
 
 public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
 {
@@ -34,7 +35,7 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
 
     [SerializeField] protected RectTransform background = null;
     [SerializeField] private RectTransform handle = null;
-    [SerializeField] private _Scripts.Communication.Controls.Cursor cursor;
+    [SerializeField] private Cursor cursor;
     
     private RectTransform baseRect = null;
 
