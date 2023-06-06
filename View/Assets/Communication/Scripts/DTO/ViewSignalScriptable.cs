@@ -6,7 +6,7 @@ using UnityEngine.Serialization;
 
 namespace Communication.Scripts.DTO
 {
-  [CreateAssetMenu(fileName = "Signal", menuName = "ScriptableObjects/Signal", order = 1)]
+  [CreateAssetMenu(fileName = "Signal", menuName = "Communication/Signal", order = 1)]
   public class ViewSignalScriptable : ScriptableObject
   {
     [FormerlySerializedAs("Operation")] public ViewOperation operation;

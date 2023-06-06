@@ -223,6 +223,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cursorSpeed: 12
   cursor: {fileID: 2835271243157957761}
+  raycastType: 0
+  radius: 0
   targetLayer:
     serializedVersion: 2
     m_Bits: 8
@@ -321,6 +323,10 @@ PrefabInstance:
     - target: {fileID: 2929252283123773939, guid: aaa2c939c0359ac4dbce3f49e8b90252, type: 3}
       propertyPath: m_Name
       value: Fixed Joystick
+      objectReference: {fileID: 0}
+    - target: {fileID: 2929252283123773939, guid: aaa2c939c0359ac4dbce3f49e8b90252, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2929252283123773951, guid: aaa2c939c0359ac4dbce3f49e8b90252, type: 3}
       propertyPath: cursor
