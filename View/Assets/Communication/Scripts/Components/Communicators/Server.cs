@@ -63,7 +63,10 @@ namespace Communication.Scripts.Components.Communicators
         
         internal void ProcessMessage(string json)
         {
-            var signal = JsonConvert.DeserializeObject<ControllerSignal>(json);
+            var signal = JsonConvert.DeserializeObject<ControllerSignal>(json, new JsonSerializerSettings()
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            });
 
             MessageReceived?.Invoke(signal);
         }

@@ -45,7 +45,10 @@ namespace Component.Communicators
 
     public void Send(ControllerSignal signal)
     {
-      var json = JsonConvert.SerializeObject(signal);
+      var json = JsonConvert.SerializeObject(signal, Formatting.Indented, new JsonSerializerSettings
+      {
+        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+      });
 
       if (signal.Operation != ControllerOperation.MoveCursor)
         Debug.Log($"Message to send: {json}");

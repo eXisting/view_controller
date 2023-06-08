@@ -7,6 +7,7 @@ using DTO;
 using Enum;
 using LiteNetLib;
 using LiteNetLib.Utils;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace Component.Communicators
@@ -62,7 +63,10 @@ namespace Component.Communicators
         
         public void ProcessSignal(string json)
         {
-            var signal = Newtonsoft.Json.JsonConvert.DeserializeObject<ViewSignal>(json);
+            var signal = JsonConvert.DeserializeObject<ViewSignal>(json, new JsonSerializerSettings()
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            });
 
             switch (signal.Operation)
             {

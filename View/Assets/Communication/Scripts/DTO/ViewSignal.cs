@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace Communication.Scripts.DTO
 {
-  [Serializable]
+  [JsonObject(MemberSerialization.OptOut)]
   public class ViewSignal
   {
     public ViewOperation Operation;
