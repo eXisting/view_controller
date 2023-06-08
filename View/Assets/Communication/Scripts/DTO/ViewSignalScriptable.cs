@@ -9,15 +9,17 @@ namespace Communication.Scripts.DTO
   [CreateAssetMenu(fileName = "Signal", menuName = "Communication/Signal", order = 1)]
   public class ViewSignalScriptable : ScriptableObject
   {
-    [FormerlySerializedAs("Operation")] public ViewOperation operation;
+    public ViewOperation operation;
     
-    [FormerlySerializedAs("UserName")] public string userName;
+    public string userName;
 
-    [FormerlySerializedAs("Message")] public string message;
+    public string message;
+
+    public string videoId;
     
-    public DateTime Time;
-    
-    [FormerlySerializedAs("VideoId")] public string videoId;
+    public bool loopVideo;
+
+    public bool muteVideo;
     
     public List<SubtitlePart> subtitles;
   }
