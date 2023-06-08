@@ -47,7 +47,8 @@ namespace Component.Communicators
     {
       var json = JsonConvert.SerializeObject(signal);
 
-      Debug.Log($"Message to send: {json}");
+      if (signal.Operation != ControllerOperation.MoveCursor)
+        Debug.Log($"Message to send: {json}");
       
       if (_net is not { FirstPeer: not null } ||
           _net.FirstPeer.ConnectionState != ConnectionState.Connected)
@@ -107,7 +108,7 @@ namespace Component.Communicators
     }
   }
 
-  public class ClientListener : INetEventListener
+  internal class ClientListener : INetEventListener
   {
     private readonly Client _client;
 
