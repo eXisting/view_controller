@@ -15,10 +15,15 @@ namespace UI.Messages
     
     [SerializeField] private GameObject messageCard;
     [SerializeField] private TMP_Text userName;
-    
+    [SerializeField] private Button back;
     [SerializeField] private VerticalUnlimitedScroller scroll;
 
     private int _index;
+
+    private void Awake()
+    {
+      back.onClick.AddListener(Close);
+    }
 
     private void OnDisable()
     {
