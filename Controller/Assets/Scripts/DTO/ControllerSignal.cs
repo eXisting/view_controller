@@ -1,10 +1,10 @@
+using System;
 using Enum;
-using Newtonsoft.Json;
 using UnityEngine;
 
 namespace DTO
 {
-  [JsonObject(MemberSerialization.OptOut)]
+  [Serializable]
   public class ControllerSignal
   {
     public ControllerOperation Operation;
