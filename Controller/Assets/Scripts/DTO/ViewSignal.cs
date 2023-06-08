@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using Enum;
-using Newtonsoft.Json;
 
 namespace DTO
 {
-  [JsonObject(MemberSerialization.OptOut)]
+  [Serializable]
   public class ViewSignal
   {
     public ViewOperation Operation;
