@@ -17,13 +17,12 @@ namespace UI.Messages
     [SerializeField] private TMP_Text userName;
     
     [SerializeField] private VerticalUnlimitedScroller scroll;
-    [SerializeField] private Button surroundingArea;
 
     private int _index;
-    
-    private void Awake()
+
+    private void OnDisable()
     {
-      surroundingArea.onClick.AddListener(Close);
+      Close();
     }
 
     public void Open(string userName)

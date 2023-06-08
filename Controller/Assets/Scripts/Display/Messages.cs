@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using Component;
-using Component.Communicators;
 using DTO;
 using Enum;
+using Newtonsoft.Json;
 using UI.Messages;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,12 +21,14 @@ namespace Display
       clear.onClick.AddListener(ClearAllMessages);
     }
 
-    private void OnEnable()
+    private void ReceiveCall()
     {
-      // var json = Newtonsoft.Json.JsonConvert.SerializeObject(new ViewSignal(operation: ViewOperation.Call, userName: "Andrew",
-      //   videoId: "Clem_CallSource", subtitles: new List<SubtitlePart> { new("Hi 1-2", 1, 2), new("bye 5-6", 5, 6) }));
-      //
-      // HeadControl.Instance.Communicator.ProcessSignal(json);
+      var signal = new ViewSignal(ViewOperation.Call, "Clement", default, DateTime.Now, "Clem_Call_Source", true, true,
+        new List<SubtitlePart> { new("Hi", 1f, 2f) });
+
+      var json = JsonConvert.SerializeObject(signal);
+
+      HeadControl.Instance.Communicator.ProcessSignal(json);
     }
 
     private void ClearAllMessages()

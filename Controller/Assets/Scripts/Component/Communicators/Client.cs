@@ -45,7 +45,7 @@ namespace Component.Communicators
 
     public void Send(ControllerSignal signal)
     {
-      var json = Newtonsoft.Json.JsonConvert.SerializeObject(signal);
+      var json = JsonConvert.SerializeObject(signal);
 
       Debug.Log($"Message to send: {json}");
       

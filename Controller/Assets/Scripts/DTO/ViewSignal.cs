@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using Enum;
+using Newtonsoft.Json;
 
 namespace DTO
 {
-  [Serializable]
+  [JsonObject(MemberSerialization.OptOut)]
   public class ViewSignal
   {
     public ViewOperation Operation;
@@ -16,6 +17,10 @@ namespace DTO
     public DateTime DateTime;
     
     public string VideoId;
+
+    public bool LoopVideo;
+
+    public bool MuteVideo;
     
     public List<SubtitlePart> Subtitles;
 
@@ -25,6 +30,8 @@ namespace DTO
       string message = default,
       DateTime dateTime = default,
       string videoId = default,
+      bool loopVideo = default,
+      bool muteVideo = default,
       List<SubtitlePart> subtitles = default)
     {
       Operation = operation;
@@ -32,6 +39,8 @@ namespace DTO
       Message = message;
       DateTime = dateTime;
       VideoId = videoId;
+      LoopVideo = loopVideo;
+      MuteVideo = muteVideo;
       Subtitles = subtitles;
     }
   }

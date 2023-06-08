@@ -39,7 +39,7 @@ namespace Screen
         {
             if (HeadControl.Instance.Communicator.Calls.Count != 0)
                 _viewSignal = HeadControl.Instance.Communicator.Calls.Pop();
-            Prepare(_viewSignal.UserName, _viewSignal.VideoId, _viewSignal.Subtitles);
+            Prepare(_viewSignal);
             
             videoPlayer.Play();
             typeMachine.gameObject.SetActive(true);
@@ -53,14 +53,16 @@ namespace Screen
         private void OnDisable() => 
             typeMachine.gameObject.SetActive(false);
 
-        private void Prepare(string userName, string videoId, List<SubtitlePart> subtitles)
+        private void Prepare(ViewSignal signal)
         {
-            if (videoId != null && _videoCalls.TryGetValue(videoId, out var videoClip))
+            if (signal.VideoId != null && _videoCalls.TryGetValue(signal.VideoId, out var videoClip))
                 videoPlayer.clip = videoClip;
             videoPlayer.Prepare();
+            videoPlayer.SetDirectAudioMute(0, signal.MuteVideo);
+            videoPlayer.isLooping = signal.LoopVideo;
 
-            this.userName.text = userName;
-            typeMachine.PrepareSubtitles(subtitles);
+            userName.text = signal.UserName;
+            typeMachine.PrepareSubtitles(signal.Subtitles);
         }
     
         private void Back()
