@@ -93,7 +93,19 @@ namespace Communication.Scripts.Controls
       
       var fsm = hit.collider.gameObject.GetComponent<PlayMakerFSM>();
 
+      if (fsm == null)
+      {
+        Debug.LogWarning($"Seems like you hit an object {hit.collider.gameObject.name}, but it had no PlayMaker script on it");
+        return;
+      }
+
       var events = fsm.FsmEvents;
+
+      if (events == null)
+      {
+        Debug.LogWarning($"Seems like you hit an object {hit.collider.gameObject.name}, but it had no events in PlayMaker editor");
+        return;
+      }
 
       foreach (var fsmEvent in events)
       {
