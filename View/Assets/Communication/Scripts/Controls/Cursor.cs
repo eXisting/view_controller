@@ -55,7 +55,7 @@ namespace Communication.Scripts.Controls
         if ((_camera.transform.localEulerAngles.x < _camData.down && direction.y < 0)
             || (_camera.transform.localEulerAngles.x > _camData.up && direction.y > 0))
         {
-          var rotation = Quaternion.Euler(-direction.y / _camData.speed * CameraSpeedScale, 0f, 0f);
+          var rotation = Quaternion.Euler(-direction.y * _camData.speed * CameraSpeedScale, 0f, 0f);
           _camera!.transform.rotation *= rotation;
         }
 
