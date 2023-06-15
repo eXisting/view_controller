@@ -20,7 +20,7 @@ namespace UI.Messages
 
     private void Awake()
     {
-      foreach (var messagePair in HeadControl.Instance.Communicator.MessagesBank)
+      foreach (var messagePair in HeadControl.Instance.MessagesBank)
       {
         var firstOrDefaultUnread = messagePair.Value.FirstOrDefault(x => !x.Read);
 
@@ -41,11 +41,12 @@ namespace UI.Messages
       Generate();
     }
     
-    private void Refresh(int index)
+    private void Refresh(string userName)
     {
-      var firstOrDefaultUnread = HeadControl.Instance.Communicator.MessagesBank[_lastMessages[index].data.UserName].FirstOrDefault(x => !x.Read);
+      var index = _lastMessages.FindIndex(x => x.data.UserName == userName);
+      var firstOrDefaultUnread = HeadControl.Instance.MessagesBank[_lastMessages[index].data.UserName].FirstOrDefault(x => !x.Read);
 
-      _lastMessages[index] = (HeadControl.Instance.Communicator.MessagesBank[_lastMessages[index].data.UserName].Last(),
+      _lastMessages[index] = (HeadControl.Instance.MessagesBank[_lastMessages[index].data.UserName].Last(),
         string.IsNullOrEmpty(firstOrDefaultUnread.UserName));
       
       Generate();
@@ -54,7 +55,7 @@ namespace UI.Messages
     private void Generate()
     {
       scroll.Clear();
-      scroll.Generate(userCard, HeadControl.Instance.Communicator.MessagesBank.Count, SetupCard);
+      scroll.Generate(userCard, HeadControl.Instance.MessagesBank.Count, SetupCard);
     }
 
     private void SetupCard(int index, ICell card)

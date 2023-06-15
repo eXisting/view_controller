@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using DTO;
@@ -15,14 +14,7 @@ namespace Component.Communicators
   public class Client : MonoBehaviour, ICommunicator
   {
     public event Action<ViewSignal> MessageReceived;
-    
-    public Stack<ViewSignal> Calls => _calls;
-    public Dictionary<string, List<MessageData>> MessagesBank => _messagesBank;
-    
-    
-    private readonly Stack<ViewSignal> _calls = new();
-    private Dictionary<string, List<MessageData>> _messagesBank = new();
-    
+
     private NetManager _net;
 
     private void Awake()
@@ -35,9 +27,6 @@ namespace Component.Communicators
     private void Start()
     {
       Debug.Log("Communicator: CLIENT");
-      
-      if (!string.IsNullOrEmpty(BlackBox.MessagesJson))
-        _messagesBank = JsonConvert.DeserializeObject<Dictionary<string, List<MessageData>>>(BlackBox.MessagesJson);
     }
     
     private void OnDestroy() =>
@@ -83,29 +72,6 @@ namespace Component.Communicators
     public void ProcessSignal(string json)
     {
       var signal = JsonConvert.DeserializeObject<ViewSignal>(json);
-
-      switch (signal.Operation)
-      {
-        case ViewOperation.Message:
-          if (_messagesBank.TryGetValue(signal.UserName, out var list))
-          {
-            list.Add(new MessageData(signal.UserName, signal.Message, signal.DateTime));
-            BlackBox.SaveMessages(_messagesBank);
-            break;
-          }
-          
-          _messagesBank.Add(signal.UserName, new List<MessageData> { new(signal.UserName, signal.Message, signal.DateTime) });
-          BlackBox.SaveMessages(_messagesBank);
-          break;
-        
-        case ViewOperation.Call:
-          _calls.Push(signal);
-          break;
-        
-        default:
-          Debug.LogError("Signal operation is unidentified");
-          break;
-      }
       
       MessageReceived?.Invoke(signal);
     }

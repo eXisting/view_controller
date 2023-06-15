@@ -16,7 +16,7 @@ namespace Screen
     private void OnDestroy() => 
       switcherPanel.FeatureSelected -= ChangeDisplay;
 
-    private void ChangeDisplay(Feature feature)
+    public void ChangeDisplay(Feature feature)
     {
       for (var index = 0; index < displays.Count; index++) 
         displays[index].SetActive(index == (int)feature);

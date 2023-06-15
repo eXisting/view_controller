@@ -34,7 +34,7 @@ namespace Display
     private void ClearAllMessages()
     {
       BlackBox.ClearMessages();
-      HeadControl.Instance.Communicator.MessagesBank.Clear();
+      HeadControl.Instance.MessagesBank.Clear();
       list.Refresh();
       bubble.Refresh();
     }

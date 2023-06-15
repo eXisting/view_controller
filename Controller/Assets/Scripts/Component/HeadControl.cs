@@ -1,8 +1,11 @@
 using System.Collections.Generic;
+using System.Linq;
 using Component.Communicators;
 using DTO;
 using Enum;
+using Newtonsoft.Json;
 using Screen;
+using UI.Messages;
 using UnityEngine;
 
 namespace Component
@@ -16,11 +19,15 @@ namespace Component
     
     [Space(10)]
     [SerializeField] private List<Page> screens;
-    
-    [SerializeField] private AudioClip messageRingtone;
+    [SerializeField] private GameObject messagesDisplay;
+    [SerializeField] private MessagesPopup messagesPopup;
     [SerializeField] private GameObject callNotification;
+    [SerializeField] private MessageNotification messageNotification;
 
-    public ICommunicator Communicator;
+    [HideInInspector] public ICommunicator Communicator;
+    
+    public readonly Stack<ViewSignal> Calls = new();
+    public Dictionary<string, List<MessageData>> MessagesBank = new();
 
     private static HeadControl _instance;
 
@@ -57,10 +64,14 @@ namespace Component
 
     private void Start()
     {
+      if (!string.IsNullOrEmpty(BlackBox.MessagesJson))
+        MessagesBank = JsonConvert.DeserializeObject<Dictionary<string, List<MessageData>>>(BlackBox.MessagesJson);
+      
       Navigator.Configure(screens);
       Navigator.Open(Enum.Screen.Sync);
       
       Communicator.MessageReceived += ProcessMessage;
+      messageNotification.Clicked += OpenMessage;
     }
 
     private void ProcessMessage(ViewSignal signal)
@@ -68,21 +79,45 @@ namespace Component
       switch (signal.Operation)
       {
         case ViewOperation.Message:
-          NotifyMessage();
+          var messageData = new MessageData(signal.UserName, signal.Message, signal.DateTime);
+
+          if (MessagesBank.TryGetValue(signal.UserName, out var list))
+            list.Add(messageData);
+          else
+            MessagesBank.Add(signal.UserName, new List<MessageData> { messageData });
+
+          BlackBox.SaveMessages(MessagesBank);
+          
+          NotifyMessage(messageData);
           break;
+        
         case ViewOperation.Call:
-          StartCoroutine(nameof(NotifyCall));
+          Calls.Push(signal);
+          
+          NotifyCall();
           break;
+        
         default:
           Debug.LogError("Operation is undefined");
           break;
       }
     }
 
-    private void NotifyMessage()
+    private void NotifyMessage(MessageData messageData)
     {
-      Handheld.Vibrate();
-      AudioSource.PlayClipAtPoint(messageRingtone, transform.position);
+      if (messagesDisplay.activeInHierarchy)
+        return;
+      
+      messageNotification.Show(messageData);
+    }
+    
+    private void OpenMessage(string userName)
+    {
+      var page = Navigator.Open(Enum.Screen.Main);
+      var mainPage = (MainScreen)page;
+      
+      mainPage.ChangeDisplay(Feature.Message);
+      messagesPopup.Open(userName);
     }
 
     private void NotifyCall()

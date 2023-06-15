@@ -37,8 +37,8 @@ namespace Screen
 
         private void OnEnable()
         {
-            if (HeadControl.Instance.Communicator.Calls.Count != 0)
-                _viewSignal = HeadControl.Instance.Communicator.Calls.Pop();
+            if (HeadControl.Instance.Calls.Count != 0)
+                _viewSignal = HeadControl.Instance.Calls.Pop();
             Prepare(_viewSignal);
             
             videoPlayer.Play();

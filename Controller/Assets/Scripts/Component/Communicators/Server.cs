@@ -1,10 +1,8 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using DTO;
-using Enum;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using Newtonsoft.Json;
@@ -15,12 +13,6 @@ namespace Component.Communicators
     public class Server : MonoBehaviour, ICommunicator
     {
         public event Action<ViewSignal> MessageReceived;
-        
-        public Stack<ViewSignal> Calls => _calls;
-        public Dictionary<string, List<MessageData>> MessagesBank => _messagesBank;
-
-        private readonly Stack<ViewSignal> _calls = new();
-        private Dictionary<string, List<MessageData>> _messagesBank = new();
 
         private NetManager _net;
         internal NetPeer Peer;
@@ -48,7 +40,7 @@ namespace Component.Communicators
 
         public void Send(ControllerSignal signal)
         {
-            var json = Newtonsoft.Json.JsonConvert.SerializeObject(signal);
+            var json = JsonConvert.SerializeObject(signal);
 
             Debug.Log(json);
 
@@ -68,29 +60,6 @@ namespace Component.Communicators
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             });
 
-            switch (signal.Operation)
-            {
-                case ViewOperation.Message:
-                    if (_messagesBank.TryGetValue(signal.UserName, out var list))
-                    {
-                        list.Add(new MessageData(signal.UserName, signal.Message, signal.DateTime));
-                        BlackBox.SaveMessages(_messagesBank);
-                        break;
-                    }
-          
-                    _messagesBank.Add(signal.UserName, new List<MessageData> { new(signal.UserName, signal.Message, signal.DateTime) });
-                    BlackBox.SaveMessages(_messagesBank);
-                    break;
-        
-                case ViewOperation.Call:
-                    _calls.Push(signal);
-                    break;
-        
-                default:
-                    Debug.LogError("Signal operation is unidentified");
-                    break;
-            }
-      
             MessageReceived?.Invoke(signal);
         }
 

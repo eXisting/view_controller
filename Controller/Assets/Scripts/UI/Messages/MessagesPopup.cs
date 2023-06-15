@@ -11,14 +11,12 @@ namespace UI.Messages
 {
   public class MessagesPopup : MonoBehaviour
   {
-    public event Action<int> Closed;
+    public event Action<string> Closed;
     
     [SerializeField] private GameObject messageCard;
     [SerializeField] private TMP_Text userName;
     [SerializeField] private Button back;
     [SerializeField] private VerticalUnlimitedScroller scroll;
-
-    private int _index;
 
     private void Awake()
     {
@@ -33,23 +31,21 @@ namespace UI.Messages
     public void Open(string userName)
     {
       this.userName.text = userName;
-      scroll.Generate(messageCard, HeadControl.Instance.Communicator.MessagesBank[userName].Count, SetupCard);
+      scroll.Generate(messageCard, HeadControl.Instance.MessagesBank[userName].Count, SetupCard);
 
       gameObject.SetActive(true);
     }
 
     private void SetupCard(int index, ICell card)
     {
-      _index = index;
-      
-      (card as MessageCard)?.Setup(HeadControl.Instance.Communicator.MessagesBank[userName.text][index], index);
+      (card as MessageCard)?.Setup(HeadControl.Instance.MessagesBank[userName.text][index], index);
     }
 
     private void Close()
     {
       scroll.Clear();
       gameObject.SetActive(false);
-      Closed?.Invoke(_index);
+      Closed?.Invoke(this.userName.text);
     }
   }
 }

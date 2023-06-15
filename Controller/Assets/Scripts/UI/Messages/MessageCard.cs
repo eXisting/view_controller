@@ -31,13 +31,13 @@ namespace UI.Messages
     
     public void OnBecomeVisible(ScrollerPanelSide side)
     {
-      var message = HeadControl.Instance.Communicator.MessagesBank[_userName][_index];
+      var message = HeadControl.Instance.MessagesBank[_userName][_index];
       message.Read = true;
-      HeadControl.Instance.Communicator.MessagesBank[_userName][_index] = message;
+      HeadControl.Instance.MessagesBank[_userName][_index] = message;
       
       read.SetActive(false);
       
-      BlackBox.SaveMessages(HeadControl.Instance.Communicator.MessagesBank);
+      BlackBox.SaveMessages(HeadControl.Instance.MessagesBank);
     }
 
     public void OnBecomeInvisible(ScrollerPanelSide side)

@@ -27,7 +27,7 @@ namespace UI.Messages
     {
       _counter = 0;
       
-      foreach (var unread in HeadControl.Instance.Communicator.MessagesBank.Select(messagePair => messagePair.Value.FindAll(x => !x.Read)))
+      foreach (var unread in HeadControl.Instance.MessagesBank.Select(messagePair => messagePair.Value.FindAll(x => !x.Read)))
         _counter += unread.Count;
       
       Show();

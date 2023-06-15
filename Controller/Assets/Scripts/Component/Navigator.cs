@@ -21,13 +21,20 @@ namespace Component
       _screens = route;
     }
     
-    public static void Open(Enum.Screen next)
+    public static Page Open(Enum.Screen next)
     {
+      var nextPage = _screens[(int)next];
+      
+      if (_current == nextPage)
+        return _current;
+      
       if (_current != null) 
         _current.Close();
       
-      _current = _screens[(int)next];
+      _current = nextPage;
       _current.Open();
+
+      return _current;
     }
   }
 }
