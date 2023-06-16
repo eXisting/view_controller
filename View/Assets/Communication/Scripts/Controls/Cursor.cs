@@ -1,4 +1,5 @@
 using System;
+using Communication.Scripts.DTO;
 using Communication.Scripts.Enum;
 using Communication.Scripts.TDO;
 using UnityEngine;
@@ -9,6 +10,7 @@ namespace Communication.Scripts.Controls
   {
     private const float CursorSpeedScale = 100f;
     private const float CameraSpeedScale = 0.2f;
+    private const float RotationError = 2f;
     
     [SerializeField] private float cursorSpeed;
     [SerializeField] private RectTransform cursor;
@@ -39,8 +41,17 @@ namespace Communication.Scripts.Controls
       if (transform.localPosition.x + _cursorDimension / 2 > transform.parent.position.x && direction.x > 0
           || -transform.localPosition.x + _cursorDimension / 2 > transform.parent.position.x && direction.x < 0)
       {
-        if (_camera.transform.localEulerAngles.y < _camData.right && direction.x > 0
-            || _camera.transform.localEulerAngles.y > _camData.left && direction.x < 0)
+        var horizontalRotation = _camera.transform.localEulerAngles.y;
+        
+        var leftLimitReached = _camData.right < _camData.left
+          ? horizontalRotation > _camData.right + RotationError ? horizontalRotation < _camData.left : horizontalRotation > _camData.left
+          : horizontalRotation < _camData.left;
+        
+        var rightLimitReached = _camData.right < _camData.left
+          ? horizontalRotation < _camData.left - RotationError ? horizontalRotation > _camData.right : horizontalRotation < _camData.right
+          : horizontalRotation > _camData.right;
+
+        if (!_camData.blockHorizontal && (_camData.freeCamera || !rightLimitReached && direction.x > 0 || !leftLimitReached && direction.x < 0))
         {
           var rotation = Quaternion.Euler(0f, direction.x * _camData.speed * CameraSpeedScale, 0f);
           _camera!.transform.rotation = rotation * _camera!.transform.rotation;
@@ -48,12 +59,21 @@ namespace Communication.Scripts.Controls
 
         direction.x = 0;
       }
-
+      
       if (transform.localPosition.y + _cursorDimension / 2 > transform.parent.position.y && direction.y > 0
           || -transform.localPosition.y + _cursorDimension / 2 > transform.parent.position.y && direction.y < 0)
       {
-        if ((_camera.transform.localEulerAngles.x < _camData.down && direction.y < 0)
-            || (_camera.transform.localEulerAngles.x > _camData.up && direction.y > 0))
+        var verticalRotation = _camera.transform.localEulerAngles.x;
+        
+        var topLimitReached = _camData.up > _camData.down
+          ? verticalRotation > _camData.down + RotationError ? verticalRotation < _camData.up : verticalRotation > _camData.up
+          : verticalRotation < _camData.up;
+      
+        var downLimitReached = _camData.up > _camData.down
+          ? verticalRotation < _camData.up - RotationError ? verticalRotation > _camData.down : verticalRotation < _camData.down
+          : verticalRotation > _camData.down;
+
+        if (!_camData.blockVertical && (_camData.freeCamera || !downLimitReached && direction.y < 0 || !topLimitReached && direction.y > 0))
         {
           var rotation = Quaternion.Euler(-direction.y * _camData.speed * CameraSpeedScale, 0f, 0f);
           _camera!.transform.rotation *= rotation;
@@ -93,19 +113,7 @@ namespace Communication.Scripts.Controls
       
       var fsm = hit.collider.gameObject.GetComponent<PlayMakerFSM>();
 
-      if (fsm == null)
-      {
-        Debug.LogWarning($"Seems like you hit an object {hit.collider.gameObject.name}, but it had no PlayMaker script on it");
-        return;
-      }
-
       var events = fsm.FsmEvents;
-
-      if (events == null)
-      {
-        Debug.LogWarning($"Seems like you hit an object {hit.collider.gameObject.name}, but it had no events in PlayMaker editor");
-        return;
-      }
 
       foreach (var fsmEvent in events)
       {
