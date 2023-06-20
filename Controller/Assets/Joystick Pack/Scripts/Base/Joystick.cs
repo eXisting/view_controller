@@ -28,6 +28,7 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
     public bool SnapY { get { return snapY; } set { snapY = value; } }
 
     [SerializeField] private float handleRange = 1;
+    [SerializeField] private float pressThreshold = 0.5f;
     [SerializeField] private float deadZone = 0;
     [SerializeField] private AxisOptions axisOptions = AxisOptions.Both;
     [SerializeField] private bool snapX = false;
@@ -68,7 +69,7 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
     {
         HeadControl.Instance.Communicator.Send(new ControllerSignal(ControllerOperation.MoveCursor, Vector2.zero));
         
-        if (Time.time - stopwatch < 0.5)
+        if (Time.time - stopwatch < pressThreshold)
             HeadControl.Instance.Communicator.Send(new ControllerSignal(ControllerOperation.Select));
 
         input = Vector2.zero;

@@ -8,7 +8,7 @@ using UnlimitedScrollUI;
 
 namespace UI.Messages
 {
-  public class MessageCard : MonoBehaviour, ICell
+  public class MessageCard : MonoBehaviour
   {
     [SerializeField] private TMP_Text date;
     [SerializeField] private TMP_Text message;
@@ -17,6 +17,17 @@ namespace UI.Messages
 
     private string _userName;
     private int _index;
+    
+    public void OnEnable()
+    {
+      var messageData = HeadControl.Instance.MessagesBank[_userName][_index];
+      messageData.Read = true;
+      HeadControl.Instance.MessagesBank[_userName][_index] = messageData;
+      
+      read.SetActive(false);
+      
+      BlackBox.SaveMessages(HeadControl.Instance.MessagesBank);
+    }
     
     public void Setup(MessageData data, int index)
     {
@@ -27,21 +38,6 @@ namespace UI.Messages
       message.text = data.Text;
       
       read.SetActive(!data.Read);
-    }
-    
-    public void OnBecomeVisible(ScrollerPanelSide side)
-    {
-      var message = HeadControl.Instance.MessagesBank[_userName][_index];
-      message.Read = true;
-      HeadControl.Instance.MessagesBank[_userName][_index] = message;
-      
-      read.SetActive(false);
-      
-      BlackBox.SaveMessages(HeadControl.Instance.MessagesBank);
-    }
-
-    public void OnBecomeInvisible(ScrollerPanelSide side)
-    {
     }
   }
 }

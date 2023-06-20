@@ -39,17 +39,14 @@ namespace UI.Calls
     private IEnumerator PlayRingtone()
     {
       source.Play();
-      _stopWatch = Time.time;
 
-      while (Time.time - _stopWatch < callRingtone.length)
+      while (true)
       {
         Handheld.Vibrate();
         Handheld.Vibrate();
         
-        yield return new WaitForSeconds(.8f);
+        yield return new WaitForSeconds(.5f);
       }
-      
-      gameObject.SetActive(false);
     }
   }
 }

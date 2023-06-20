@@ -16,6 +16,9 @@ namespace Component
 
     static BlackBox()
     {
+      if (HeadControl.Instance.testingMode)
+        ClearMessages();
+      
       if (!File.Exists(PathToFile))
         return;
       

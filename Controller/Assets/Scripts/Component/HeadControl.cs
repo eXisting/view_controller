@@ -1,5 +1,6 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Component.Communicators;
 using DTO;
 using Enum;
@@ -7,20 +8,23 @@ using Newtonsoft.Json;
 using Screen;
 using UI.Messages;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Component
 {
   public class HeadControl : MonoBehaviour
   {
-    [Header("Communication")]
+    [Header("Setup")]
     [SerializeField] public CommunicatorType communicatorType;
+    [SerializeField] public bool testingMode;
+    
+    [Header("Embedded"), Space(20)]
     [SerializeField] private Client client;
     [SerializeField] private Server server;
     
-    [Space(10)]
     [SerializeField] private List<Page> screens;
     [SerializeField] private GameObject messagesDisplay;
-    [SerializeField] private MessagesPopup messagesPopup;
+    [SerializeField] private MessagesList messagesList;
     [SerializeField] private GameObject callNotification;
     [SerializeField] private MessageNotification messageNotification;
 
@@ -117,12 +121,55 @@ namespace Component
       var mainPage = (MainScreen)page;
       
       mainPage.ChangeDisplay(Feature.Message);
-      messagesPopup.Open(userName);
+      messagesList.Open(userName);
     }
 
     private void NotifyCall()
     {
       callNotification.gameObject.SetActive(true);
+    }
+    
+    public void Test()
+    {
+      ReceiveMessage();
+    }
+    
+    private IEnumerator TestCoroutine()
+    {
+      yield return new WaitForSeconds(3);
+    }
+
+    private void ReceiveCall()
+    {
+      var signal = new ViewSignal(ViewOperation.Call,
+        "Clement",
+        default,
+        DateTime.Now,
+        "Clem_Call_Source",
+        true,
+        true,
+        new List<SubtitlePart>
+        {
+          new("Hi",
+            1f,
+            2f)
+        });
+
+      var json = JsonConvert.SerializeObject(signal);
+
+      Communicator.ProcessSignal(json);
+    }
+    
+    private void ReceiveMessage()
+    {
+      var signal = new ViewSignal(ViewOperation.Message,
+        "Clement",
+        "Something is wrong with messages. Something is wrong with messages. Something is wrong with messages. Something is wrong with messages. Something is wrong with messages. When message is too long it isnt properly visible. A little bit more.",
+        DateTime.Now);
+
+      var json = JsonConvert.SerializeObject(signal);
+
+      Communicator.ProcessSignal(json);
     }
   }
 }

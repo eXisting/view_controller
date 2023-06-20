@@ -7,6 +7,7 @@ using UnityEditor;
 public class JoystickEditor : Editor
 {
     private SerializedProperty handleRange;
+    private SerializedProperty pressThreshold;
     private SerializedProperty deadZone;
     private SerializedProperty axisOptions;
     private SerializedProperty snapX;
@@ -19,6 +20,7 @@ public class JoystickEditor : Editor
     protected virtual void OnEnable()
     {
         handleRange = serializedObject.FindProperty("handleRange");
+        pressThreshold = serializedObject.FindProperty("pressThreshold");
         deadZone = serializedObject.FindProperty("deadZone");
         axisOptions = serializedObject.FindProperty("axisOptions");
         snapX = serializedObject.FindProperty("snapX");
@@ -50,6 +52,7 @@ public class JoystickEditor : Editor
     protected virtual void DrawValues()
     {
         EditorGUILayout.PropertyField(handleRange, new GUIContent("Handle Range", "The distance the visual handle can move from the center of the joystick."));
+        EditorGUILayout.PropertyField(pressThreshold, new GUIContent("Press Threshold", "The time threshold for regulating how fast joystick should be pressed."));
         EditorGUILayout.PropertyField(deadZone, new GUIContent("Dead Zone", "The distance away from the center input has to be before registering."));
         EditorGUILayout.PropertyField(axisOptions, new GUIContent("Axis Options", "Which axes the joystick uses."));
         EditorGUILayout.PropertyField(snapX, new GUIContent("Snap X", "Snap the horizontal input to a whole value."));
