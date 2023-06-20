@@ -6076,7 +6076,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   communicatorType: 1
-  testingMode: 1
+  testingMode: 0
   client: {fileID: 6525710413402375987, guid: b2eaa8eef0d0c444089a6761c4da1001, type: 3}
   server: {fileID: 8576609412698260438, guid: 7971a782f0dfa431a97191ae51cc961f, type: 3}
   screens:
